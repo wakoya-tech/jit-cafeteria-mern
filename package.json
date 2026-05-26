@@ -1,0 +1,15 @@
+{
+  "name": "jit-cafeteria-management",
+  "version": "1.0.0",
+  "description": "Jimma University Institute of Technology - Student Cafeteria Management System (MERN)",
+  "private": true,
+  "scripts": {
+    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "dev": "concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\"",
+    "seed": "npm run seed --prefix backend",
+    "build": "npm run build --prefix frontend"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
