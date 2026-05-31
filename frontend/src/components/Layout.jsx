@@ -2,6 +2,7 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { UNIVERSITY } from '../config/university';
 const NAV = {
+  
   administrator: [
     { to: '/', label: 'Dashboard' },
     { to: '/users', label: 'Users' },
