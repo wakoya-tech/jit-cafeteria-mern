@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 
 const SHIFTS = ['Morning Shift', 'Afternoon Shift', 'Evening Shift', 'None'];
 // POSITIONS removed - using only ASSIGNED_ROLES
-const ASSIGNED_ROLES = ['Cashier', 'Food Server', 'Cleaner', 'Kitchen Staff', 'Supervisor'];
+const ASSIGNED_ROLES = ['Ticker', 'Food Server', 'Cleaner', 'Kitchen Staff', 'Supervisor'];
 
 export default function StaffManagementPage() {
     const { user } = useAuth();
@@ -218,7 +218,7 @@ export default function StaffManagementPage() {
                                             <td><strong>{s.fullName || s.username}</strong></td>
                                             <td>
                                                 <select
-                                                    value={s.assignedRole || 'Cashier'}
+                                                    value={s.assignedRole || 'Ticker'}
                                                     onChange={(e) => updateStaff(s._id, { assignedRole: e.target.value })}
                                                     className="staff-select"
                                                 >

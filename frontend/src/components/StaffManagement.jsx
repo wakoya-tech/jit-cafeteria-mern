@@ -6,7 +6,7 @@ const SHIFTS = ['Shift A (6:00-14:00)', 'Shift B (12:00-20:00)', 'Off', 'None'];
 const DAYS = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
 
 // Only ASSIGNED_ROLES - position removed
-const ASSIGNED_ROLES = ['Cashier', 'Food Server', 'Cleaner', 'Kitchen Staff', 'Supervisor'];
+const ASSIGNED_ROLES = ['Ticker', 'Food Server', 'Cleaner', 'Kitchen Staff', 'Supervisor'];
 
 export default function StaffManagement({ userRole }) {
     const [staff, setStaff] = useState([]);
@@ -122,7 +122,7 @@ export default function StaffManagement({ userRole }) {
                                     <td>
                                         {/* Only assignedRole - position removed */}
                                         <select
-                                            value={s.assignedRole || 'Cashier'}
+                                            value={s.assignedRole || 'Ticker'}
                                             onChange={(e) => updateStaff(s._id, { assignedRole: e.target.value })}
                                             className="role-select"
                                         >

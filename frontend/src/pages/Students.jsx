@@ -13,7 +13,10 @@ export default function Students() {
   const [msg, setMsg] = useState('');
 
   const load = () =>
-    api(`/students${search ? `?search=${encodeURIComponent(search)}` : ''}`).then(setStudents);
+    api(`/students${search ? `?search=${encodeURIComponent(search)}` : ''}`).then((results) => {
+      setStudents(results);
+      return results;
+    });
 
   useEffect(() => {
     load().catch((e) => setMsg(e.message));
@@ -54,7 +57,7 @@ export default function Students() {
             <h4>Jimma University Registrar Portal Integration</h4>
             <p>
               Student cafeteria rosters are synchronized directly from academic affairs databases.
-              Cafeteria cashiers, managers, and administrators have <strong>read-only access</strong> and
+              Cafeteria tickers, managers, and administrators have <strong>read-only access</strong> and
               cannot register new students or edit student details.
             </p>
           </div>
@@ -154,6 +157,32 @@ export default function Students() {
                 Non-Cafeteria Student
               </label>
             </div>
+            {form._id && (
+              <div className="card" style={{ marginBottom: '1.5rem', borderLeft: '4px solid var(--jit-gold)' }}>
+                <h3>Biometric Enrollment</h3>
+                <p style={{ marginBottom: '1rem', color: 'var(--text-muted)' }}>
+                  Simulate enrollment of face and fingerprint templates for this student. In production this would connect to biometric hardware and secure template storage.
+                </p>
+                <div className="form-group">
+                  <label>Face template</label>
+                  <textarea
+                    value={form.faceTemplate || ''}
+                    onChange={(e) => setForm({ ...form, faceTemplate: e.target.value })}
+                    placeholder="Paste face template data or leave blank if not enrolled"
+                    rows={3}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Fingerprint template</label>
+                  <textarea
+                    value={form.fingerprintTemplate || ''}
+                    onChange={(e) => setForm({ ...form, fingerprintTemplate: e.target.value })}
+                    placeholder="Paste fingerprint template data or leave blank if not enrolled"
+                    rows={3}
+                  />
+                </div>
+              </div>
+            )}
             <div className="flex-row">
               <button type="submit" className="btn btn-primary">
                 Save Student
@@ -191,6 +220,8 @@ export default function Students() {
                     </span>
                     {s.is_intern && <span className="badge badge-warning">Intern</span>}
                     {s.is_non_cafe && <span className="badge badge-danger">Non-Cafe</span>}
+                    {s.faceTemplate && <span className="badge badge-success">Face enrolled</span>}
+                    {s.fingerprintTemplate && <span className="badge badge-success">Fingerprint enrolled</span>}
                   </div>
                 </td>
                 <td>

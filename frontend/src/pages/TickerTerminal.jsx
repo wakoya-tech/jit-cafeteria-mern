@@ -393,7 +393,7 @@ export default function TickerTerminal() {
                         <div>
                           <span className="id-card-id">{verifyResult.student.student_id}</span>
                         </div>
-                        
+
                         {(verifyResult.student.is_intern || verifyResult.student.is_non_cafe) && (
                           <div style={{ marginTop: '0.5rem', display: 'flex', gap: '0.25rem' }}>
                             {verifyResult.student.is_intern && <span className="badge badge-warning">Intern Blocked</span>}
@@ -419,14 +419,12 @@ export default function TickerTerminal() {
               </div>
             </div>
 
-            {/* Error or Deny Reason Banner */}
             {verifyResult.message && (
               <div className={`alert ${verifyResult.eligible ? 'alert-success' : 'alert-error'}`} style={{ marginTop: '1.25rem', justifyContent: 'center' }}>
                 <strong>{verifyResult.eligible ? '✔' : '❌'} {verifyResult.message}</strong>
               </div>
             )}
 
-            {/* Record Meal button */}
             {verifyResult.eligible && (
               <div style={{ textAlign: 'center', marginTop: '1.25rem' }}>
                 <button

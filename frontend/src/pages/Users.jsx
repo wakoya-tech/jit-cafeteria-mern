@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { api } from '../api/client';
 
-const ROLES = ['administrator', 'cafeteria_manager', 'cashier'];
+const ROLES = ['administrator', 'cafeteria_manager', 'ticker', 'cashier'];
 
 export default function Users() {
   const [users, setUsers] = useState([]);
@@ -43,7 +43,7 @@ export default function Users() {
         type="button"
         className="btn btn-primary"
         style={{ marginBottom: '1rem' }}
-        onClick={() => setForm({ username: '', password: '', role: 'cashier', fullName: '' })}
+        onClick={() => setForm({ username: '', password: '', role: 'ticker', fullName: '' })}
       >
         + Add User
       </button>

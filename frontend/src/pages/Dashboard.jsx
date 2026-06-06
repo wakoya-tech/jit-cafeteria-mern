@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { api } from '../api/client';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { useTranslation } from '../context/TranslationContext';
 
 export default function Dashboard() {
   const [stats, setStats] = useState(null);
@@ -10,6 +12,8 @@ export default function Dashboard() {
   const [weather, setWeather] = useState('clear');
   const [schedule, setSchedule] = useState('classes');
   const [dayType, setDayType] = useState('weekday');
+  const { user } = useAuth();
+  const { t } = useTranslation();
 
   const load = () =>
     api('/reports/dashboard')
@@ -68,70 +72,70 @@ export default function Dashboard() {
   };
 
   if (error) return <div className="alert alert-error">{error}</div>;
-  if (!stats) return <p>Loading dashboard...</p>;
+  if (!stats) return <p>{t('loading_dashboard')}</p>;
 
   const forecast = calculateForecast();
 
   return (
     <div>
       <div className="page-header">
-        <h2>Management Dashboard</h2>
-        <p>Real-time JIT cafeteria operations — refreshes every 30 seconds</p>
+        <h2>{t('management_dashboard')}</h2>
+        <p>{t('dashboard_subtitle')}</p>
       </div>
 
       <div className="card-grid">
         <div className="card stat-card">
           <div className="value">{stats.todayMeals}</div>
-          <div className="label">Meals Served Today</div>
+          <div className="label">{t('meals_served_today')}</div>
         </div>
         <div className="card stat-card">
           <div className="value">{stats.activeStudents}</div>
-          <div className="label">Eligible Students</div>
+          <div className="label">{t('eligible_students')}</div>
         </div>
         <div className="card stat-card">
           <div className="value">{stats.lowStockCount}</div>
-          <div className="label">Low Stock Items</div>
+          <div className="label">{t('low_stock_items')}</div>
         </div>
         <div className="card stat-card">
           <div className="value">{stats.pendingComplaints}</div>
-          <div className="label">Pending Complaints</div>
+          <div className="label">{t('pending_complaints')}</div>
         </div>
         <div className="card stat-card">
           <div className="value">{stats.todayInspections}</div>
-          <div className="label">Deliveries Inspected Today</div>
+          <div className="label">{t('deliveries_inspected_today')}</div>
         </div>
         <div className="card stat-card">
           <div className="value">{stats.failedInspectionsToday}</div>
-          <div className="label">Failed Inspections Today</div>
+          <div className="label">{t('failed_inspections_today')}</div>
         </div>
       </div>
 
       {/* AI Cafeteria Predictor Section */}
       <div className="card" style={{ marginBottom: '1.5rem', borderLeft: '4px solid var(--jit-gold)' }}>
         <h3 style={{ color: 'var(--jit-gold)', display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.4rem' }}>
-          🤖 JiT Cafeteria AI Predictor (Food Availability & Reliability)
+          🤖 JiT Cafeteria AI Predictor ({t('food_availability_reliability')})
         </h3>
         <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', marginBottom: '1.25rem' }}>
-          Forecast meal attendance and evaluate inventory reliability under varying campus weather, day patterns, and academic cycles.
+          {t('prediction_subtitle')}
         </p>
 
         <div className="ai-forecast-container">
           <div className="ai-controls-box">
-            <h4 style={{ marginBottom: '1rem', color: '#fff', fontSize: '1rem' }}>Simulation Parameters</h4>
+            <h4 style={{ marginBottom: '1rem', color: '#fff', fontSize: '1rem' }}>{t('simulation_parameters')}</h4>
             
             <div className="form-group">
-              <label>Academic Calendar Period</label>
+              <label>{t('academic_calendar_period')}</label>
               <select value={schedule} onChange={(e) => setSchedule(e.target.value)}>
-                <option value="classes">Regular Lecture Classes (Standard Turnout)</option>
-                <option value="midterms">JiT Midterm Exam Week (+22% Turnout)</option>
-                <option value="finals">JiT Final Exam Week (+38% Turnout - High Campus Activity)</option>
-                <option value="holiday">Semester Break / Holiday (-82% Turnout)</option>
+                <option value="classes">{t('regular_lecture_classes')}</option>
+                <option value="midterms">{t('midterm_exam_week')}</option>
+                <option value="finals">{t('final_exam_week')}</option>
+                <option value="holiday">{t('holiday_period')}</option>
               </select>
             </div>
 
             <div className="flex-row" style={{ gap: '1.25rem', marginTop: '1rem' }}>
               <div className="form-group" style={{ flex: 1, minWidth: '140px' }}>
-                <label>Weather in Jimma</label>
+                <label>{t('weather_in_jimma')}</label>
                 <select value={weather} onChange={(e) => setWeather(e.target.value)}>
                   <option value="clear">☀️ Clear / Warm (Baseline)</option>
                   <option value="rainy">🌧️ Rainy / Wet (+15% Demand)</option>
@@ -140,20 +144,20 @@ export default function Dashboard() {
               </div>
 
               <div className="form-group" style={{ flex: 1, minWidth: '140px' }}>
-                <label>Day Pattern</label>
+                <label>{t('day_pattern')}</label>
                 <select value={dayType} onChange={(e) => setDayType(e.target.value)}>
-                  <option value="weekday">📅 Weekday (Full Operations)</option>
-                  <option value="weekend">🏖️ Weekend (-32% Dorm Occupancy)</option>
+                  <option value="weekday">📅 {t('weekday_full_operations')}</option>
+                  <option value="weekend">🏖️ {t('weekend_reduced_occupancy')}</option>
                 </select>
               </div>
             </div>
           </div>
 
           <div className="ai-status-box">
-            <h4 style={{ color: '#fff', fontSize: '0.95rem' }}>Cafeteria Reliability Score</h4>
+            <h4 style={{ color: '#fff', fontSize: '0.95rem' }}>{t('cafeteria_reliability_score')}</h4>
             <div className={`ai-status-dial ${forecast.reliability >= 85 ? 'high' : forecast.reliability >= 70 ? 'medium' : 'low'}`}>
               <span className="score">{forecast.reliability}%</span>
-              <span className="lbl">Reliable</span>
+              <span className="lbl">{t('reliable')}</span>
             </div>
             <div className="ai-grid" style={{ width: '100%' }}>
               <div className="ai-grid-box">
@@ -181,7 +185,7 @@ export default function Dashboard() {
       </div>
 
       <div className="card" style={{ marginBottom: '1rem' }}>
-        <h3 style={{ marginBottom: '0.75rem' }}>Today by meal type</h3>
+        <h3 style={{ marginBottom: '0.75rem' }}>{t('today_by_meal_type')}</h3>
         <div className="flex-row">
           {['breakfast', 'lunch', 'dinner'].map((m) => (
             <span key={m} className="badge badge-success" style={{ padding: '0.5rem 1rem' }}>
@@ -205,14 +209,14 @@ export default function Dashboard() {
             </tbody>
           </table>
           <Link to="/reports" className="btn btn-secondary mt-1">
-            Full reports
+            {t('full_reports')}
           </Link>
         </div>
       )}
 
       {stats.recentTransactions?.length > 0 && (
         <div className="card" style={{ marginBottom: '1rem' }}>
-          <h3 style={{ marginBottom: '0.75rem' }}>Recent verifications</h3>
+          <h3 style={{ marginBottom: '0.75rem' }}>{t('recent_verifications')}</h3>
           <table>
             <thead>
               <tr>
@@ -240,7 +244,7 @@ export default function Dashboard() {
 
       {stats.lowStock?.length > 0 && (
         <div className="card">
-          <h3 style={{ marginBottom: '0.75rem', color: 'var(--warning)' }}>Low stock alert</h3>
+          <h3 style={{ marginBottom: '0.75rem', color: 'var(--warning)' }}>{t('low_stock_alert')}</h3>
           <ul>
             {stats.lowStock.map((i) => (
               <li key={i._id}>
@@ -250,10 +254,10 @@ export default function Dashboard() {
           </ul>
           <div className="flex-row mt-1">
             <Link to="/inventory" className="btn btn-secondary">
-              Manage inventory
+              {t('manage_inventory')}
             </Link>
             <Link to="/quality" className="btn btn-secondary">
-              Quality inspections
+              {t('quality_inspections')}
             </Link>
           </div>
         </div>
