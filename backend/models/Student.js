@@ -12,6 +12,8 @@ const studentSchema = new mongoose.Schema(
     is_intern: { type: Boolean, default: false },
     is_non_cafe: { type: Boolean, default: false },
     imageUrl: { type: String, default: "" },
+    faceTemplate: { type: String, default: '' },
+    fingerprintTemplate: { type: String, default: '' },
   },
   { timestamps: true }
 );

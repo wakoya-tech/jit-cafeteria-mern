@@ -16,8 +16,131 @@ const router = express.Router();
 
 router.use(protect);
 
+const studentResponse = (student) => ({
+  student_id: student.student_id,
+  name: student.name,
+  department: student.department,
+  program: student.program,
+  eligibility_status: student.eligibility_status,
+  is_intern: student.is_intern,
+  is_non_cafe: student.is_non_cafe,
+  imageUrl: student.imageUrl,
+  year: student.year,
+});
+
+const findStudent = async (studentId) => Student.findOne({
+  $or: [{ student_id: studentId }, { barcode: studentId }],
+});
+
+const validateStudentAccess = (student) => {
+  if (!student.eligibility_status) {
+    return {
+      status: 403,
+      body: {
+        eligible: false,
+        message: 'Student is not eligible for meals.',
+        student: studentResponse(student),
+      },
+    };
+  }
+  if (student.is_intern) {
+    return {
+      status: 403,
+      body: {
+        eligible: false,
+        message: 'Access Denied: Student is currently on internship and cannot access cafeteria meals.',
+        student: studentResponse(student),
+      },
+    };
+  }
+  if (student.is_non_cafe) {
+    return {
+      status: 403,
+      body: {
+        eligible: false,
+        message: 'Access Denied: Student is designated as Non-Cafeteria and cannot access cafeteria meals.',
+        student: studentResponse(student),
+      },
+    };
+  }
+  return null;
+};
+
+/** Biometric verification stub.
+ * Accepts biometric_type = face|fingerprint and student_id for simulation.
+ * In a real deployment, biometric_payload would be matched against enrolled templates.
+ */
+router.post('/verify-biometric', authorize('ticker', 'cafeteria_manager', 'administrator'), async (req, res) => {
+  try {
+    const { biometric_type, biometric_payload, student_id } = req.body;
+    if (!biometric_type || !['face', 'fingerprint'].includes(biometric_type)) {
+      return res.status(400).json({ message: 'Invalid biometric type.' });
+    }
+
+    if (!student_id) {
+      return res.status(501).json({
+        message: 'Biometric recognition is not configured. Provide student_id for simulation or enroll biometric templates in the student record.',
+      });
+    }
+
+    const parsedId = parseStudentScan(student_id) || student_id.toUpperCase().trim();
+    const student = await findStudent(parsedId);
+    if (!student) {
+      return res.status(404).json({
+        eligible: false,
+        message: 'Student not found in Jimma University registry.',
+      });
+    }
+
+    const denied = validateStudentAccess(student);
+    if (denied) return res.status(denied.status).json(denied.body);
+
+    const requiredTemplate = biometric_type === 'face' ? student.faceTemplate : student.fingerprintTemplate;
+    if (!requiredTemplate) {
+      return res.status(403).json({
+        eligible: false,
+        message: `Student has no enrolled ${biometric_type} biometric data.`,
+        student: studentResponse(student),
+      });
+    }
+
+    const mealType = req.body.meal_type || getCurrentMealType();
+    if (!mealType) {
+      return res.status(400).json({
+        eligible: false,
+        message: 'Outside official meal service hours.',
+        windows: {
+          breakfast: getMealWindowLabel('breakfast'),
+          lunch: getMealWindowLabel('lunch'),
+          dinner: getMealWindowLabel('dinner'),
+        },
+      });
+    }
+
+    const todayStart = startOfDay();
+    const todayEnd = endOfDay();
+    const existing = await Transaction.findOne({
+      student_id: parsedId,
+      meal_type: mealType,
+      transaction_date: { $gte: todayStart, $lte: todayEnd },
+    });
+
+    return res.json({
+      eligible: !existing,
+      alreadyServed: !!existing,
+      student: studentResponse(student),
+      meal_type: mealType,
+      service_window: getMealWindowLabel(mealType),
+      verification_method: biometric_type,
+      message: existing ? `Already received ${mealType} today.` : 'Eligible for meal.',
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 /** Verify eligibility and check duplicate for current service period */
-router.post('/verify', authorize('cashier', 'cafeteria_manager', 'administrator'), async (req, res) => {
+router.post('/verify', authorize('ticker', 'cafeteria_manager', 'administrator'), async (req, res) => {
   try {
     const rawScan = req.body.scan_data || req.body.student_id || '';
     const studentId = parseStudentScan(rawScan);
@@ -133,7 +256,7 @@ router.post('/verify', authorize('cashier', 'cafeteria_manager', 'administrator'
 });
 
 /** Record meal transaction (duplicate prevention enforced) */
-router.post('/transaction', authorize('cashier', 'administrator'), async (req, res) => {
+router.post('/transaction', authorize('ticker', 'cafeteria_manager', 'administrator'), async (req, res) => {
   try {
     const rawScan = req.body.scan_data || req.body.student_id || '';
     const studentId = parseStudentScan(rawScan);
@@ -201,7 +324,7 @@ router.post('/transaction', authorize('cashier', 'administrator'), async (req, r
   }
 });
 
-router.get('/transactions', authorize('administrator', 'cafeteria_manager', 'cashier'), async (req, res) => {
+router.get('/transactions', authorize('administrator', 'cafeteria_manager', 'ticker'), async (req, res) => {
   const { date, meal_type, student_id } = req.query;
   const filter = {};
   if (date) {

@@ -19,8 +19,15 @@ export const protect = async (req, res, next) => {
   }
 };
 
+const normalizeRole = (role) => {
+  if (!role) return role;
+  if (role === 'cashier') return 'ticker';
+  return role;
+};
+
 export const authorize = (...roles) => (req, res, next) => {
-  if (!roles.includes(req.user.role)) {
+  const userRole = normalizeRole(req.user.role);
+  if (!roles.includes(userRole)) {
     return res.status(403).json({ message: 'Access denied for your role.' });
   }
   next();

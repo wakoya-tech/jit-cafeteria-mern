@@ -39,15 +39,15 @@ async function seed() {
     const usersData = [
       { username: 'admin', password: 'admin123', role: 'administrator', fullName: 'System Administrator', assignedRole: 'Admin', assignedShift: 'None', position: 'Supervisor' },
       { username: 'manager', password: 'manager123', role: 'cafeteria_manager', fullName: 'Cafeteria Manager', assignedRole: 'Manager', assignedShift: 'None', position: 'Supervisor' },
-      { username: 'cashier1', password: 'cashier123', role: 'cashier', fullName: 'Cashier One', assignedRole: 'Cashier', assignedShift: 'Shift A', position: 'Cashier', phoneNumber: '0912345678' },
-      { username: 'cashier2', password: 'cashier123', role: 'cashier', fullName: 'Cashier Two', assignedRole: 'Cashier', assignedShift: 'Shift B', position: 'Cashier', phoneNumber: '0923456789' },
-      { username: 'cashier3', password: 'cashier123', role: 'cashier', fullName: 'Cashier Three', assignedRole: 'Cashier', assignedShift: 'Shift A', position: 'Cashier', phoneNumber: '0934567890' },
-      { username: 'registrar', password: 'registrar123', role: 'registrar', fullName: 'Academic Registrar Staff', assignedRole: 'Registrar', assignedShift: 'None', position: 'Staff' },
-      { username: 'server1', password: 'server123', role: 'cashier', fullName: 'Solomon Bekele', assignedRole: 'Food Server', assignedShift: 'Shift A', position: 'Food Server', phoneNumber: '0945678901' },
-      { username: 'server2', password: 'server123', role: 'cashier', fullName: 'Aster Kebede', assignedRole: 'Food Server', assignedShift: 'Shift B', position: 'Food Server', phoneNumber: '0956789012' },
-      { username: 'cleaner1', password: 'cleaner123', role: 'cashier', fullName: 'Almaz Tolosa', assignedRole: 'Cleaner', assignedShift: 'Shift A', position: 'Cleaner', phoneNumber: '0967890123' },
-      { username: 'kitchen1', password: 'kitchen123', role: 'cashier', fullName: 'Tadesse Worku', assignedRole: 'Kitchen Staff', assignedShift: 'Shift A', position: 'Kitchen Staff', phoneNumber: '0978901234' },
-      { username: 'kitchen2', password: 'kitchen123', role: 'cashier', fullName: 'Meron Desta', assignedRole: 'Kitchen Staff', assignedShift: 'Shift B', position: 'Kitchen Staff', phoneNumber: '0989012345' },
+      { username: 'cashier1', password: 'cashier123', role: 'ticker', fullName: 'Cashier One', assignedRole: 'Cashier', assignedShift: 'Morning Shift', position: 'Cashier', phoneNumber: '0912345678' },
+      { username: 'cashier2', password: 'cashier123', role: 'ticker', fullName: 'Cashier Two', assignedRole: 'Cashier', assignedShift: 'Afternoon Shift', position: 'Cashier', phoneNumber: '0923456789' },
+      { username: 'cashier3', password: 'cashier123', role: 'ticker', fullName: 'Cashier Three', assignedRole: 'Cashier', assignedShift: 'Morning Shift', position: 'Cashier', phoneNumber: '0934567890' },
+      { username: 'registrar', password: 'registrar123', role: 'registrar', fullName: 'Academic Registrar Staff', assignedRole: 'Registrar', assignedShift: 'None', position: 'Supervisor' },
+      { username: 'server1', password: 'server123', role: 'ticker', fullName: 'Solomon Bekele', assignedRole: 'Food Server', assignedShift: 'Morning Shift', position: 'Food Server', phoneNumber: '0945678901' },
+      { username: 'server2', password: 'server123', role: 'ticker', fullName: 'Aster Kebede', assignedRole: 'Food Server', assignedShift: 'Afternoon Shift', position: 'Food Server', phoneNumber: '0956789012' },
+      { username: 'cleaner1', password: 'cleaner123', role: 'ticker', fullName: 'Almaz Tolosa', assignedRole: 'Cleaner', assignedShift: 'Morning Shift', position: 'Cleaner', phoneNumber: '0967890123' },
+      { username: 'kitchen1', password: 'kitchen123', role: 'ticker', fullName: 'Tadesse Worku', assignedRole: 'Kitchen Staff', assignedShift: 'Morning Shift', position: 'Kitchen Staff', phoneNumber: '0978901234' },
+      { username: 'kitchen2', password: 'kitchen123', role: 'ticker', fullName: 'Meron Desta', assignedRole: 'Kitchen Staff', assignedShift: 'Afternoon Shift', position: 'Kitchen Staff', phoneNumber: '0989012345' },
     ];
 
     const users = await User.create(usersData);
@@ -131,7 +131,7 @@ async function seed() {
     console.log('\n=== Jimma University Cafeteria — Demo Accounts ===');
     console.log('Administrator : username: "admin", password: "admin123"');
     console.log('Manager       : username: "manager", password: "manager123"');
-    console.log('Cashier       : username: "cashier1", password: "cashier123"');
+    console.log('Ticker        : username: "cashier1", password: "cashier123"');
     console.log('\nID verification:');
     console.log('  Barcode (legacy JIT ID card): scan student ID e.g. RU0830/16');
     console.log('  QR card: JU|RU0830/16');

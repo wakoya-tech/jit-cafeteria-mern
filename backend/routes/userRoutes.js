@@ -51,7 +51,7 @@ router.get('/attendance', authorize('administrator', 'cafeteria_manager'), async
 
     // Get all active staff
     const staff = await User.find({
-      role: { $in: ['cashier'] },
+      role: { $in: ['ticker'] },
       status: { $ne: 'Left Work' }
     }).select('-password');
 

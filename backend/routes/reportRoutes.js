@@ -152,7 +152,7 @@ router.get('/staff', authorize('administrator', 'cafeteria_manager'), async (req
     }
     startDate.setHours(0, 0, 0, 0);
 
-    const allStaff = await User.find({ role: { $in: ['cashier'] } });
+    const allStaff = await User.find({ role: { $in: ['ticker'] } });
     const leftWorkStaff = allStaff.filter(s => s.status === 'Left Work');
     const activeStaff = allStaff.filter(s => s.status === 'Active');
     const onLeaveStaff = allStaff.filter(s => s.status === 'On Leave');

@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.use(protect);
 
-router.get('/', authorize('administrator', 'cafeteria_manager', 'cashier'), async (req, res) => {
+router.get('/', authorize('administrator', 'cafeteria_manager', 'ticker'), async (req, res) => {
   const { search, department } = req.query;
   const filter = {};
   if (search) {
@@ -21,7 +21,7 @@ router.get('/', authorize('administrator', 'cafeteria_manager', 'cashier'), asyn
   res.json(students);
 });
 
-router.get('/qr/:studentId', authorize('administrator', 'cafeteria_manager', 'cashier'), async (req, res) => {
+router.get('/qr/:studentId', authorize('administrator', 'cafeteria_manager', 'ticker'), async (req, res) => {
   const student = await Student.findOne({
     student_id: req.params.studentId.toUpperCase(),
   });
@@ -35,7 +35,7 @@ router.get('/qr/:studentId', authorize('administrator', 'cafeteria_manager', 'ca
   });
 });
 
-router.get('/:studentId', authorize('administrator', 'cafeteria_manager', 'cashier', 'student'), async (req, res) => {
+router.get('/:studentId', authorize('administrator', 'cafeteria_manager', 'ticker', 'student'), async (req, res) => {
   const student = await Student.findOne({
     student_id: req.params.studentId.toUpperCase(),
   });

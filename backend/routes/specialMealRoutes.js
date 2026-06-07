@@ -131,7 +131,7 @@ router.put('/:id/approve', protect, authorize('administrator', 'cafeteria_manage
 });
 
 // Get active special meal requests for today
-router.get('/active-today', protect, authorize('administrator', 'cafeteria_manager', 'cashier'), async (req, res) => {
+router.get('/active-today', protect, authorize('administrator', 'cafeteria_manager', 'ticker'), async (req, res) => {
     try {
         const today = new Date();
         const activeRequests = await SpecialMealRequest.find({
